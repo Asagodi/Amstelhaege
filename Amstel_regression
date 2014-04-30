@@ -438,8 +438,25 @@ def doIterations():
     time.sleep(5)
     AmstelVisualization(valueDict[max(valueList)][0], 120, 160, valueDict[max(valueList)][1], max(valueList))
 
-def doXIterations(numIter, houseNum, variant):
-    
+def doXPlacements(numIter, houseNum, variant):
+    """
+    Returns dictionairy of vrijstand to houseList and value
+    and dictionairy of value to houseList and vrijstand.
+    """
+    vrijList = []
+    valueList = []
+    houseListList = []
+    vrijDict = {}
+    valueDict = {}
+    for i in range(numIter):
+        houseList = inithouse(houseNum)
+        houseList = changestartpos(houseList, houseNum, variant)
+        totalVrij = round(calcTotalVrij(houseList), 2)
+        totalValue = round(calcTotalValue(houseList), 2)
+        vrijDict[totalVrij] = [houseList, totalValue]
+        valueDict[totalValue] = [houseList, totalVrij]
+    return vrijDict, valueDict
+
 def lsts(x, y, line, variant):
     #x and y lists
     xr =  array(x[:])
@@ -466,21 +483,11 @@ def makeStats():
             vrijDict = {}
             valueDict = {}
             placements = 10
-            for j in range(placements):
-                houseNum = 20
-                houseList = inithouse(houseNum)
-                houseList = changestartpos(houseList, houseNum, variant)
-                totalVrij = calcTotalVrij(houseList)
-                totalValue = calcTotalValue(houseList)
-                vrijDict[totalVrij] = [houseList, totalValue]
-                valueDict[totalValue] = [houseList, totalVrij]
-                vrijList.append(totalVrij)
-                valueList.append(totalValue)
-            maisonDistList.append(calcTotalCenterDist(vrijDict[max(vrijList)][0], "maison"))
-            eenDistList.append(calcTotalCenterDist(valueDict[max(valueList)][0], "eengezins"))
-            bestValuesList.append(max(valueList))
-            eenValueDistDict[calcTotalCenterDist(valueDict[max(valueList)][0], "eengezins")] = max(valueList)   
-            BBDict[max(valueList)] = valueDict[max(valueList)][0]
+            vrijDict, valueDict = doXPlacements(placements, 20, variant)
+            eenDistList.append(calcTotalCenterDist(valueDict[max(valueDict.keys())][0], "eengezins"))
+            bestValuesList.append(max(valueDict.keys()))
+            eenValueDistDict[calcTotalCenterDist(valueDict[max(valueDict.keys())][0], "eengezins")] = max(valueDict.keys())   
+            BBDict[max(valueDict.keys())] = valueDict[max(valueDict.keys())][0]
         
         if o == 0:
             lsts(eenDistList, bestValuesList, 'r-', variant)

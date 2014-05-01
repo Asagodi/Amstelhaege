@@ -484,10 +484,11 @@ def makeStats():
             valueDict = {}
             placements = 10
             vrijDict, valueDict = doXPlacements(placements, 20, variant)
-            eenDistList.append(calcTotalCenterDist(valueDict[max(valueDict.keys())][0], "eengezins"))
-            bestValuesList.append(max(valueDict.keys()))
-            eenValueDistDict[calcTotalCenterDist(valueDict[max(valueDict.keys())][0], "eengezins")] = max(valueDict.keys())   
-            BBDict[max(valueDict.keys())] = valueDict[max(valueDict.keys())][0]
+            maxValue = max(valueDict.keys())
+            eenDistList.append(calcTotalCenterDist(valueDict[maxValue][0], "eengezins"))
+            bestValuesList.append(maxValue)
+            eenValueDistDict[calcTotalCenterDist(valueDict[maxValue][0], "eengezins")] = maxValue   
+            BBDict[maxValue] = valueDict[maxValue][0]
         
         if o == 0:
             lsts(eenDistList, bestValuesList, 'r-', variant)
